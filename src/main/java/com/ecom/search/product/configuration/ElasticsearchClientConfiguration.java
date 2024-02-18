@@ -18,14 +18,19 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.collect.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.demo.aws.elasticsearch.data.repository")
+@EnableElasticsearchRepositories(basePackages = "com.ecom.search.product.repository")
 //@ComponentScan(basePackages = "com.betterjavacode.elasticsearchdemo")
 public class ElasticsearchClientConfiguration {
+
+  @Value("${aws.es.endpoint}")
+  private String endpoint;
+
   @Bean
   public RestHighLevelClient createSimpleElasticClient() throws Exception {
     try {
@@ -33,16 +38,12 @@ public class ElasticsearchClientConfiguration {
           new BasicCredentialsProvider();
       credentialsProvider.setCredentials(AuthScope.ANY,
           new UsernamePasswordCredentials("admin", "Admin@123"));
-
-      BasicHeader h1 =
-          new BasicHeader("Accept", "application/vnd.elasticsearch+json;compatible-with=7");
-      BasicHeader h2 = new BasicHeader("Content-Type", "application/vnd.elasticsearch+json;");
       SSLContextBuilder sslBuilder = SSLContexts.custom()
           .loadTrustMaterial(null, (x509Certificates, s) -> true);
       final SSLContext sslContext = sslBuilder.build();
       RestHighLevelClient client = new RestHighLevelClient(RestClient
           .builder(new HttpHost(
-              "search-catalogue-4zf2yrsluz6bqoykb4nbnf377e.ap-south-1.es.amazonaws.com", 443,
+              endpoint, 443,
               "https"))
 //port number is given as 443 since its https schema
           .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
