@@ -1,6 +1,7 @@
 package com.ecom.search.product.controller;
 
 import com.ecom.search.product.model.ProductDto;
+import com.ecom.search.product.model.ProductResponseDto;
 import com.ecom.search.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @Slf4j
-@RequestMapping("/photos")
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
@@ -45,13 +44,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> findAll() {
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+    public ResponseEntity<ProductResponseDto> findAll() {
+        return new ResponseEntity<>(new ProductResponseDto(service.findAll()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProductDto>> search(@RequestParam(value = "key") String key, @RequestParam(value = "value") String value) {
-        return new ResponseEntity<>(service.search(key, value), HttpStatus.OK);
+    public ResponseEntity<ProductResponseDto> search(@RequestParam(value = "key") String key, @RequestParam(value = "value") String value) {
+        return new ResponseEntity<>(new ProductResponseDto(service.search(key, value)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

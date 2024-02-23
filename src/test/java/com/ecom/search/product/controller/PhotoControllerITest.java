@@ -1,7 +1,15 @@
 package com.ecom.search.product.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.ecom.search.product.Application;
 import com.ecom.search.product.model.ProductDto;
+import com.ecom.search.product.model.ProductResponseDto;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,15 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -48,10 +47,10 @@ class PhotoControllerITest {
     @Test
     void getAllPhotoTest() {
         createPhotoDtoResponseEntity();
-        ResponseEntity<List<ProductDto>> responseEntity = photoController.findAll();
+        ResponseEntity<ProductResponseDto> responseEntity = photoController.findAll();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
-        assertFalse(responseEntity.getBody().isEmpty());
+        assertFalse(responseEntity.getBody().getProducts().isEmpty());
     }
 
     @Test
@@ -82,10 +81,10 @@ class PhotoControllerITest {
     @Test
     void searchPhotoTest() {
         ProductDto productDto = createPhotoDtoResponseEntity();
-        ResponseEntity<List<ProductDto>> responseEntity = photoController.search("name", productDto.getName());
+        ResponseEntity<ProductResponseDto> responseEntity = photoController.search("name", productDto.getName());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
-        Optional<ProductDto> any = responseEntity.getBody().stream().findAny();
+        Optional<ProductDto> any = responseEntity.getBody().getProducts().stream().findAny();
         assertTrue(any.isPresent());
         assertEquals(productDto.getId(), any.get().getId());
         responseEntity = photoController.search("title", UUID.randomUUID().toString());
