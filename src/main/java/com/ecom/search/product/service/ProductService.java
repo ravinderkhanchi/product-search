@@ -38,11 +38,11 @@ public class ProductService {
     private ProductDto getPhotoDto(ProductDocument productDocument) {
         ProductDto productDto = new ProductDto();
         BeanUtils.copyProperties(productDocument, productDto);
-        //productDto.setCategory("Shoes");
-        //productDto.setName("Puma");
-        //productDto.setImageUrl("https://th.bing.com/th/id/OIP.nQp2-Ryas00tk6n0tbT5igHaHa?pid=ImgDet&w=199&h=199&c=7&dpr=1.5");
-        //productDto.setPrice("2000");
-        //productDto.setDiscountedPrice("2200");
+        productDto.setCategory("Shoes");
+        productDto.setName("Puma");
+        productDto.setImageUrl("https://th.bing.com/th/id/OIP.nQp2-Ryas00tk6n0tbT5igHaHa?pid=ImgDet&w=199&h=199&c=7&dpr=1.5");
+        productDto.setPrice("2000");
+        productDto.setDiscountedPrice("2200");
         return productDto;
     }
 
@@ -60,8 +60,8 @@ public class ProductService {
     }
 
     public List<ProductDto> findAll() {
-        Iterable<ProductDocument> photoDocuments = productRepository.findAll();
-        //List<ProductDocument> photoDocuments = new ArrayList<>();
+        //Iterable<ProductDocument> photoDocuments = productRepository.findAll();
+        List<ProductDocument> photoDocuments = new ArrayList<>();
         return getPhotoDtos(photoDocuments);
     }
 
