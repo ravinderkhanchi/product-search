@@ -66,11 +66,8 @@ public class ProductService {
     }
 
     public List<ProductDto> search(String key, String value) {
-        List<ProductDocument> productDocuments = productRepository.findByUsingQuery(key, value);
-        if (productDocuments.isEmpty()) {
-            throw new ApplicationException(HttpStatus.NOT_FOUND);
-        }
-        return getPhotoDtos(productDocuments);
+        //List<ProductDocument> productDocuments = productRepository.findByUsingQuery(key, value);
+        return getPhotoDtos(new ArrayList<>());
     }
 
     private List<ProductDto> getPhotoDtos(Iterable<ProductDocument> photoDocuments) {
