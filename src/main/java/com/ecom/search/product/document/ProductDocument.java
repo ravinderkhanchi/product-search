@@ -18,5 +18,6 @@ public class ProductDocument {
     private String imageUrl;
     private String price;
     private String discountedPrice;
+    private String description;
 
 }

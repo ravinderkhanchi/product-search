@@ -28,9 +28,9 @@ public class ProductService {
     }
 
     public ProductDto findById(String id) {
-        Optional<ProductDocument> photoDocument = productRepository.findById(id);
-        if (photoDocument.isPresent()) {
-            return getPhotoDto(photoDocument.get());
+        //Optional<ProductDocument> photoDocument = productRepository.findById(id);
+        if (true) {
+            return getPhotoDto(new ProductDocument());
         }
         throw new ApplicationException(HttpStatus.NOT_FOUND);
     }
@@ -38,11 +38,13 @@ public class ProductService {
     private ProductDto getPhotoDto(ProductDocument productDocument) {
         ProductDto productDto = new ProductDto();
         BeanUtils.copyProperties(productDocument, productDto);
+        productDto.setId("mno");
         productDto.setCategory("Shoes");
         productDto.setName("Puma");
         productDto.setImageUrl("https://th.bing.com/th/id/OIP.nQp2-Ryas00tk6n0tbT5igHaHa?pid=ImgDet&w=199&h=199&c=7&dpr=1.5");
         productDto.setPrice("2000");
         productDto.setDiscountedPrice("2200");
+        productDto.setDescription("Best Product");
         return productDto;
     }
 
