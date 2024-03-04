@@ -4,6 +4,8 @@ import com.ecom.search.product.document.ProductDocument;
 import com.ecom.search.product.exception.ApplicationException;
 import com.ecom.search.product.model.ProductDto;
 import com.ecom.search.product.repository.ProductRepository;
+import java.util.Objects;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,30 +30,27 @@ public class ProductService {
     }
 
     public ProductDto findById(String id) {
-        //Optional<ProductDocument> photoDocument = productRepository.findById(id);
-        if (true) {
-            return getPhotoDto(new ProductDocument());
-        }
-        throw new ApplicationException(HttpStatus.NOT_FOUND);
+        Optional<ProductDocument> photoDocument = productRepository.findById(id);
+        return photoDocument.map(this::getPhotoDto).orElse(null);
     }
 
     private ProductDto getPhotoDto(ProductDocument productDocument) {
         ProductDto productDto = new ProductDto();
         BeanUtils.copyProperties(productDocument, productDto);
-        productDto.setId("mno");
-        productDto.setCategory("Shoes");
-        productDto.setName("Puma");
-        productDto.setImageUrl("https://th.bing.com/th/id/OIP.nQp2-Ryas00tk6n0tbT5igHaHa?pid=ImgDet&w=199&h=199&c=7&dpr=1.5");
-        productDto.setPrice("2000");
-        productDto.setDiscountedPrice("2200");
-        productDto.setDescription("Best Product");
+        //productDto.setCategory("Shoes");
+        //productDto.setName("Puma");
+        //productDto.setImageUrl("https://th.bing.com/th/id/OIP.nQp2-Ryas00tk6n0tbT5igHaHa?pid=ImgDet&w=199&h=199&c=7&dpr=1.5");
+        //productDto.setPrice("2000");
+        //productDto.setDiscountedPrice("2200");
         return productDto;
     }
 
     private ProductDocument getPhotoDocument(ProductDto productDto) {
         ProductDocument productDocument = new ProductDocument();
         BeanUtils.copyProperties(productDto, productDocument);
-        //productDocument.setId(UUID.randomUUID().toString());
+        if(Objects.isNull(productDocument.getId())){
+            productDocument.setId(UUID.randomUUID().toString());
+        }
         return productDocument;
     }
 
@@ -62,14 +61,17 @@ public class ProductService {
     }
 
     public List<ProductDto> findAll() {
-        //Iterable<ProductDocument> photoDocuments = productRepository.findAll();
-        List<ProductDocument> photoDocuments = new ArrayList<>();
+        Iterable<ProductDocument> photoDocuments = productRepository.findAll();
+        //List<ProductDocument> photoDocuments = new ArrayList<>();
         return getPhotoDtos(photoDocuments);
     }
 
     public List<ProductDto> search(String key, String value) {
-        //List<ProductDocument> productDocuments = productRepository.findByUsingQuery(key, value);
-        return getPhotoDtos(new ArrayList<>());
+        List<ProductDocument> productDocuments = productRepository.findByUsingQuery(key, value);
+        if (productDocuments.isEmpty()) {
+            throw new ApplicationException(HttpStatus.NOT_FOUND);
+        }
+        return getPhotoDtos(productDocuments);
     }
 
     private List<ProductDto> getPhotoDtos(Iterable<ProductDocument> photoDocuments) {

@@ -58,9 +58,9 @@ class PhotoControllerITest {
         ProductDto productDto = createPhotoDtoResponseEntity();
         String updatedTitle = "Title Updated";
         productDto.setName(updatedTitle);
-        ResponseEntity<Void> responseEntity = photoController.updatePhoto(productDto.getId(),
+        ResponseEntity<ProductDto> responseEntity = photoController.updatePhoto(productDto.getId(),
             productDto);
-        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseEntity<ProductDto> byId = photoController.findById(productDto.getId());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(byId.getBody());

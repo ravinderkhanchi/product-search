@@ -3,6 +3,7 @@ package com.ecom.search.product.controller;
 import com.ecom.search.product.model.ProductDto;
 import com.ecom.search.product.model.ProductResponseDto;
 import com.ecom.search.product.service.ProductService;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,15 +33,19 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updatePhoto(@PathVariable String id, @RequestBody
+    public ResponseEntity<ProductDto> updatePhoto(@PathVariable String id, @RequestBody
     ProductDto document) {
-        service.updatePhoto(id, document);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        document.setId(id);
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductDto> findById(@PathVariable String id) {
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+        ProductDto byId = service.findById(id);
+        if(Objects.nonNull(byId)){
+            return new ResponseEntity<>(byId, HttpStatus.OK);
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
