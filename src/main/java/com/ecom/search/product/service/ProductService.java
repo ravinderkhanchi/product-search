@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 @Service
 @Slf4j
@@ -67,9 +68,15 @@ public class ProductService {
     }
 
     public List<ProductDto> search(String key, String value) {
+        if(StringUtils.isEmpty(key)){
+            List<ProductDocument> productDocuments = productRepository.findByUsingQuery(value);
+            if (productDocuments.isEmpty()) {
+                return new ArrayList<>();
+            }
+        }
         List<ProductDocument> productDocuments = productRepository.findByUsingQuery(key, value);
         if (productDocuments.isEmpty()) {
-            throw new ApplicationException(HttpStatus.NOT_FOUND);
+            return new ArrayList<>();
         }
         return getPhotoDtos(productDocuments);
     }

@@ -21,6 +21,6 @@ public interface ProductRepository extends ElasticsearchRepository<ProductDocume
     @Query("{\"match\": {\"?0\": \"?1\"}}")
     List<ProductDocument> findByUsingQuery(String key, String value);
 
-    @Query("{\"match\": {\"_all\": \"?0\"}}")
+    @Query("{\"query_string\": {\"query\": \"?0\", \"fields\": [\"name\"]}}")
     List<ProductDocument> findByUsingQuery(String value);
 }
